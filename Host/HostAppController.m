@@ -11,21 +11,20 @@
 #import <Security/Authorization.h>
 
 #import "HostAppController.h"
-#import "Helper.h"
-
+#import "Injector.h"
 
 @interface HostAppController()
 
 #pragma mark - Private Properties
 
 @property (nonatomic, retain) NSConnection* connection;
-@property (nonatomic, retain) NSString* helperID;
+@property (nonatomic, retain) NSString* injectorID;
 
 #pragma mark - Private Methods
 
-- (Helper*)helper;
+- (Injector*)injector;
 - (OSStatus)setupAuthorization:(AuthorizationRef*)authRef;
-- (NSError*)installHelperApplication;
+- (NSError*)installInjectorApplication;
 - (void)setStatus:(NSString*)status error:(NSError*)error;
 
 @end
@@ -37,7 +36,7 @@
 #pragma mark - Properties
 
 @synthesize connection;
-@synthesize helperID;
+@synthesize injectorID;
 @synthesize label;
 
 #pragma mark - Object Lifecycle
@@ -49,7 +48,7 @@
 - (void)dealloc 
 {
     [connection release];
-    [helperID release];
+    [injectorID release];
     
     [super dealloc];
 }
@@ -64,27 +63,27 @@
 {
     // try to install ("bless") the helper tool
     // this will copy it into the right place and set up the launchd plist (if it isn't already there)
-    NSError* error = [self installHelperApplication];
+    NSError* error = [self installInjectorApplication];
 	if (!error)
     {
         // it worked - try to communicate with it
-		[self setStatus:@"Helper is available" error:error];
-        Helper* helper = [self helper];
-        if (helper)
+		[self setStatus:@"Injector is available" error:error];
+        Injector* injector = [self injector];
+        if (injector)
         {
             // we got a connection to it
-            [self setStatus:[NSString stringWithFormat:@"Helper is running with process id %d", helper.pid] error:error];
+            [self setStatus:[NSString stringWithFormat:@"Injector is running"] error:error];
         }
         else
         {
             // failed to get a connection, that might just be because it's not started
-            [self setStatus:@"Helper is installed, but not running" error:error];
+            [self setStatus:@"Injector is installed, but not running" error:error];
         }
 	}
     else
     {
         // it didn't work
-        [self setStatus:@"Helper could not be installed" error:error];
+        [self setStatus:@"Injector could not be installed" error:error];
 	} 
 }
 
@@ -141,15 +140,15 @@
 }
 
 // --------------------------------------------------------------------------
-//! Attempt to install the helper.
+//! Attempt to install the injector.
 // --------------------------------------------------------------------------
 
-- (NSError*)installHelperApplication
+- (NSError*)installInjectorApplication
 {
-    // look up the helper bundle id in our plist
+    // look up the injector bundle id in our plist
     // (we're assuming that it's the one and only key inside the SMPrivilegedExecutables dictionary)
     NSDictionary* helpers = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"SMPrivilegedExecutables"];
-    self.helperID = [[helpers allKeys] objectAtIndex:0];
+    self.injectorID = [[helpers allKeys] objectAtIndex:0];
 
 	// Obtain the right to install privileged helper tools (kSMRightBlessPrivilegedHelper).
     NSError* error = nil;
@@ -162,7 +161,7 @@
 		 * is extracted and placed in /Library/LaunchDaemons and then loaded. The
 		 * executable is placed in /Library/PrivilegedHelperTools.
 		 */
-		SMJobBless(kSMDomainSystemLaunchd, (CFStringRef) self.helperID, authRef, (CFErrorRef*) error);
+		SMJobBless(kSMDomainSystemLaunchd, (CFStringRef) self.injectorID, authRef, (CFErrorRef*) error);
     }
     else
     {
@@ -172,7 +171,7 @@
 	return error;
 }
 
-#pragma mark - Helper
+#pragma mark - Injector
 
 // --------------------------------------------------------------------------
 //! Return a proxy to the helper object in the helper tool.
@@ -181,14 +180,14 @@
 //! (eg the helper isn't installed or isn't running)
 // --------------------------------------------------------------------------
 
-- (Helper*)helper
+- (Injector*)injector
 {
-    Helper* helper = nil;
+    Injector* injector = nil;
     
     if (!self.connection)
     {
         // Lookup the server connection
-        NSString* name = @"com.elegantchaos.helper.helper";
+        NSString* name = @"com.elegantchaos.injector.injector";
         self.connection = [NSConnection connectionWithRegisteredName:name host:nil];
         if (!self.connection)
         {
@@ -209,27 +208,31 @@
             NSLog(@"could not get proxy");
         }
         
-        helper = (Helper*)proxy;
+        injector = (Injector*)proxy;
     }
 
-    return helper;
+    return injector;
 }
 
 // --------------------------------------------------------------------------
-//! Send a "command" to the helper.
+//! Send a "command" to the injector.
 //! In this example a command is just a string that we send
-//! by invoking the doCommand method on the helper.
+//! by invoking the doCommand method on the injector.
 // --------------------------------------------------------------------------
 
-- (IBAction)sendToHelper:(id)sender
+- (IBAction)inject:(id)sender
 {
 
-    Helper* helper = [self helper];
-    NSLog(@"description: %@", [helper description]);
-    NSLog(@"uid = %d, euid = %d, pid = %d\n", helper.uid, helper.euid, helper.pid);
-    
-    NSString* result = [helper doCommand:@"test command"];
-    NSLog(@"result of command was: %@", result);
+    Injector* injector = [self injector];
+    OSStatus result = [injector injectBundleAtURL:bundleURL intoApplicationWithId:@"com.apple.finder"];
+    if (result)
+    {
+        NSLog(@"injected ok");
+    }
+    else
+    {
+        NSLog(@"injection failed with error %d", result);
+    }
 }
 
 @end

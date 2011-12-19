@@ -9,15 +9,11 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Injector : NSObject<NSConnectionDelegate>
-
-@property (nonatomic, assign) pid_t pid;
-@property (nonatomic, assign) uid_t uid;
-@property (nonatomic, assign) uid_t euid;
+@interface Injector : NSObject
 
 - (id)initWithName:(NSString*)name;
 - (void)log:(NSString*)msg;
 - (void)error:(NSString*)msg;
-- (NSString*)doCommand:(NSString*)command;
+- (OSStatus)injectBundleAtURL:(NSURL*)bundleURL intoApplicationWithId:(NSString*)appId;
 
 @end

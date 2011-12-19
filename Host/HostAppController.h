@@ -13,6 +13,6 @@
 
 @property (nonatomic, assign) IBOutlet NSTextField* label;
 
-- (IBAction)sendToHelper:(id)sender;
+- (IBAction)inject:(id)sender;
 
 @end

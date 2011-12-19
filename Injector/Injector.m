@@ -9,8 +9,14 @@
 
 #import "Injector.h"
 
-#include <syslog.h>
 #import <asl.h>
+
+#include <CoreServices/CoreServices.h>
+#include <Foundation/Foundation.h>
+#include <AppKit/AppKit.h>
+#include <AppKit/NSRunningApplication.h>
+
+#import <mach_inject_bundle/mach_inject_bundle.h>
 
 @interface Injector()
 @property (nonatomic, assign) aslclient aslClient;
@@ -21,26 +27,27 @@
 
 @synthesize aslClient;
 @synthesize aslMsg;
-@synthesize euid;
-@synthesize pid;
-@synthesize uid;
 
 - (id)initWithName:(NSString *)name
 {
     if ((self = [super init]) != nil)
     {
-        self.uid = getuid();
-        self.euid = geteuid();
-        self.pid = getpid();
-
-        const char* name_c = [name UTF8String];
-        self.aslClient = asl_open(name_c, "Daemon", ASL_OPT_STDERR);
+        
+       const char* name_c = [name UTF8String];
+       self.aslClient = asl_open(name_c, "Injector", ASL_OPT_STDERR);
         self.aslMsg = asl_new(ASL_TYPE_MSG);
-        asl_set(self.aslMsg, ASL_KEY_SENDER, name_c);
-        asl_log(self.aslClient, aslMsg, ASL_LEVEL_NOTICE, "helper server %s created: uid = %d, euid = %d, pid = %d\n", name_c, self.uid, self.euid, self.pid);
+        asl_log(self.aslClient, aslMsg, ASL_LEVEL_NOTICE, "injector initialised");
     }
     
     return self;
+}
+
+- (void)dealloc 
+{
+    asl_free(self.aslMsg);
+    asl_close(self.aslClient);
+    
+    [super dealloc];
 }
 
 - (void)log:(NSString *)msg
@@ -53,11 +60,27 @@
     asl_log(self.aslClient, self.aslMsg, ASL_LEVEL_ERR, "%s", [msg UTF8String]);
 }
 
-- (NSString*)doCommand:(NSString*)command
+- (OSStatus)injectBundleAtURL:(NSURL *)bundleURL intoApplicationWithId:(NSString *)appId
 {
-	asl_log(aslClient, aslMsg, ASL_LEVEL_NOTICE, "received command: %s", [command UTF8String]);
-    
-    NSString* result = [NSString stringWithFormat:@"did command: %@", command];
+    const char* bundlePath = [[bundleURL path] fileSystemRepresentation];
+	asl_log(aslClient, aslMsg, ASL_LEVEL_NOTICE, "injecting bundle %s into app %s", bundlePath, [appId UTF8String]);
+
+    OSStatus result = fnfErr;
+    NSArray* apps = [[NSWorkspace sharedWorkspace] runningApplications];
+    for (NSRunningApplication* app in apps)
+    {
+        if ([[app bundleIdentifier] isEqualToString:appId])
+        {
+            pid_t process_id = [app processIdentifier];
+            asl_log(aslClient, aslMsg, ASL_LEVEL_NOTICE, "injecting bundle %s into %s (%d)", bundlePath, [[app localizedName] UTF8String], process_id);
+            result = mach_inject_bundle_pid(bundlePath, process_id);
+            if (result != err_none)
+            {
+                asl_log(aslClient, aslMsg, ASL_LEVEL_ERR, "injection failed with error %d", result);
+            }
+            break;
+        }
+    }
     
     return result;
 }
