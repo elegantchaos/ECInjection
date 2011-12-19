@@ -62,6 +62,10 @@
 
 - (OSStatus)injectBundleAtURL:(NSURL *)bundleURL intoApplicationWithId:(NSString *)appId
 {
+    NSURL* container = [bundleURL URLByDeletingLastPathComponent];
+    NSBundle* framework = [NSBundle bundleWithURL:[container URLByAppendingPathComponent:@"mach_inject_bundle.framework"]];
+    [framework load];
+    
     const char* bundlePath = [[bundleURL path] fileSystemRepresentation];
 	asl_log(aslClient, aslMsg, ASL_LEVEL_NOTICE, "injecting bundle %s into app %s", bundlePath, [appId UTF8String]);
 
