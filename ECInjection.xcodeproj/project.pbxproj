@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		22426152149FB8E800DB6C53 /* Injector.m in Sources */ = {isa = PBXBuildFile; fileRef = 2242614D149FB8E700DB6C53 /* Injector.m */; };
 		22426153149FB8E800DB6C53 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2242614F149FB8E700DB6C53 /* main.m */; };
+		22426179149FC61E00DB6C53 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224E7D92149A26C60063A520 /* CoreFoundation.framework */; };
+		22426186149FC6D300DB6C53 /* Injected.m in Sources */ = {isa = PBXBuildFile; fileRef = 22426185149FC6D300DB6C53 /* Injected.m */; };
+		22426188149FC71900DB6C53 /* Injected.plist in Resources */ = {isa = PBXBuildFile; fileRef = 22426187149FC71800DB6C53 /* Injected.plist */; };
 		2266420D149A9634003B7019 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2266420C149A9634003B7019 /* Foundation.framework */; };
 		227E267F149B54F900E04B27 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 227E267E149B54F900E04B27 /* AppKit.framework */; };
 		227E2680149B552000E04B27 /* ReadMe.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 22929E3B149A729000E06226 /* ReadMe.markdown */; };
@@ -21,6 +24,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2242616E149FC57D00DB6C53 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22426163149FC57C00DB6C53 /* mach_inject_bundle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = mach_inject_bundle;
+		};
+		22426172149FC5B900DB6C53 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 22426163149FC57C00DB6C53 /* mach_inject_bundle.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = mach_inject_bundle;
+		};
 		4BE4907E1044624F006BE471 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -61,6 +78,11 @@
 		2242614F149FB8E700DB6C53 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		22426150149FB8E700DB6C53 /* Processed-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Processed-Info.plist"; sourceTree = "<group>"; };
 		22426151149FB8E700DB6C53 /* Processed-Launchd.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Processed-Launchd.plist"; sourceTree = "<group>"; };
+		22426163149FC57C00DB6C53 /* mach_inject_bundle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mach_inject_bundle.xcodeproj; path = mach_star/mach_inject_bundle/mach_inject_bundle.xcodeproj; sourceTree = "<group>"; };
+		22426178149FC61E00DB6C53 /* injected.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = injected.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		22426184149FC6D300DB6C53 /* Injected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Injected.h; sourceTree = "<group>"; };
+		22426185149FC6D300DB6C53 /* Injected.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Injected.m; sourceTree = "<group>"; };
+		22426187149FC71800DB6C53 /* Injected.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Injected.plist; sourceTree = "<group>"; };
 		224E7D92149A26C60063A520 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		2266420C149A9634003B7019 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		227E267C149B53AA00E04B27 /* Settings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Settings.xcconfig; sourceTree = "<group>"; };
@@ -78,6 +100,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		22426175149FC61E00DB6C53 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				22426179149FC61E00DB6C53 /* CoreFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4BE4905B10445E0A006BE471 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -104,6 +134,7 @@
 			children = (
 				8D1107320486CEB800E47090 /* host.app */,
 				4BE4905D10445E0A006BE471 /* com.elegantchaos.injection.injector */,
+				22426178149FC61E00DB6C53 /* injected.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -111,15 +142,27 @@
 		2242614A149FB8E700DB6C53 /* Injector */ = {
 			isa = PBXGroup;
 			children = (
-				2242614B149FB8E700DB6C53 /* info.plist */,
+				22426184149FC6D300DB6C53 /* Injected.h */,
+				22426185149FC6D300DB6C53 /* Injected.m */,
 				2242614C149FB8E700DB6C53 /* Injector.h */,
 				2242614D149FB8E700DB6C53 /* Injector.m */,
+				2242614B149FB8E700DB6C53 /* info.plist */,
 				2242614E149FB8E700DB6C53 /* Launchd.plist */,
+				22426187149FC71800DB6C53 /* Injected.plist */,
 				2242614F149FB8E700DB6C53 /* main.m */,
 				22426150149FB8E700DB6C53 /* Processed-Info.plist */,
 				22426151149FB8E700DB6C53 /* Processed-Launchd.plist */,
+				22426163149FC57C00DB6C53 /* mach_inject_bundle.xcodeproj */,
 			);
 			path = Injector;
+			sourceTree = "<group>";
+		};
+		22426164149FC57C00DB6C53 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2242616F149FC57D00DB6C53 /* mach_inject_bundle.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		29B97314FDCFA39411CA2CEA /* SMJobBless */ = {
@@ -172,6 +215,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		22426177149FC61E00DB6C53 /* injected */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 22426181149FC61E00DB6C53 /* Build configuration list for PBXNativeTarget "injected" */;
+			buildPhases = (
+				22426174149FC61E00DB6C53 /* Sources */,
+				22426175149FC61E00DB6C53 /* Frameworks */,
+				22426176149FC61E00DB6C53 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = injected;
+			productName = "injected bundle";
+			productReference = 22426178149FC61E00DB6C53 /* injected.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
 		4BE4905C10445E0A006BE471 /* injector */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4BE4906210445E31006BE471 /* Build configuration list for PBXNativeTarget "injector" */;
@@ -184,6 +244,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				22426173149FC5B900DB6C53 /* PBXTargetDependency */,
 			);
 			name = injector;
 			productName = SMJobBlessHelper;
@@ -228,15 +289,40 @@
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* SMJobBless */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 22426164149FC57C00DB6C53 /* Products */;
+					ProjectRef = 22426163149FC57C00DB6C53 /* mach_inject_bundle.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				8D1107260486CEB800E47090 /* host */,
 				4BE4905C10445E0A006BE471 /* injector */,
+				22426177149FC61E00DB6C53 /* injected */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXReferenceProxy section */
+		2242616F149FC57D00DB6C53 /* mach_inject_bundle.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = mach_inject_bundle.framework;
+			remoteRef = 2242616E149FC57D00DB6C53 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
 /* Begin PBXResourcesBuildPhase section */
+		22426176149FC61E00DB6C53 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				22426188149FC71900DB6C53 /* Injected.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8D1107290486CEB800E47090 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -284,6 +370,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		22426174149FC61E00DB6C53 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				22426186149FC6D300DB6C53 /* Injected.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4BE4905A10445E0A006BE471 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -305,6 +399,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		22426173149FC5B900DB6C53 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = mach_inject_bundle;
+			targetProxy = 22426172149FC5B900DB6C53 /* PBXContainerItemProxy */;
+		};
 		4BE4907F1044624F006BE471 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4BE4905C10445E0A006BE471 /* injector */;
@@ -313,6 +412,53 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		22426182149FC61E00DB6C53 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "injected bundle/injected bundle-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				INFOPLIST_FILE = Injector/Injected.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		22426183149FC61E00DB6C53 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "injected bundle/injected bundle-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				INFOPLIST_FILE = Injector/Injected.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
 		4BE4905F10445E0B006BE471 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -417,6 +563,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		22426181149FC61E00DB6C53 /* Build configuration list for PBXNativeTarget "injected" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				22426182149FC61E00DB6C53 /* Debug */,
+				22426183149FC61E00DB6C53 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		4BE4906210445E31006BE471 /* Build configuration list for PBXNativeTarget "injector" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
