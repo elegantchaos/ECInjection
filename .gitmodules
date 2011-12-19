@@ -1,0 +1,3 @@
+[submodule "Injector/mach_star"]
+	path = Injector/mach_star
+	url = git@github.com:samdeane/mach_star.git
