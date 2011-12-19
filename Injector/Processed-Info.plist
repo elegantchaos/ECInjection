@@ -3,16 +3,16 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleIdentifier</key>
-	<string>${INJECTOR_ID}</string>
+	<string>com.elegantchaos.injection.injector</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>${INJECTOR_ID}</string>
+	<string>com.elegantchaos.injection.injector</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>SMAuthorizedClients</key>
 	<array>
-		<string>identifier com.elegantchaos.injection.host and certificate leaf[subject.CN] = &quot;${INJECTOR_SIGNING}&quot;</string>
+		<string>identifier com.elegantchaos.injection.host and certificate leaf[subject.CN] = &quot;3rd Party Mac Developer Application: Sam Deane&quot;</string>
 	</array>
 </dict>
 </plist>

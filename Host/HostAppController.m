@@ -187,7 +187,7 @@
     if (!self.connection)
     {
         // Lookup the server connection
-        NSString* name = @"com.elegantchaos.injector.injector";
+        NSString* name = @"com.elegantchaos.injection.injector";
         self.connection = [NSConnection connectionWithRegisteredName:name host:nil];
         if (!self.connection)
         {

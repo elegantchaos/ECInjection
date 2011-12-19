@@ -355,16 +355,16 @@
 			files = (
 			);
 			inputPaths = (
-				Helper/Info.plist,
-				Helper/Launchd.plist,
+				Injector/Info.plist,
+				Injector/Launchd.plist,
 			);
 			outputPaths = (
-				"Helper/Processed-Info.plist",
-				"Helper/Processed-Launchd.plist",
+				"Injector/Processed-Info.plist",
+				"Injector/Processed-Launchd.plist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cat \"Injector/Info.plist\" | sed -e \"s/\\${HELPER_ID}/${HELPER_ID}/\" | sed -e \"s/\\${HELPER_SIGNING}/${HELPER_SIGNING}/\" | sed -e \"s/\\${HOST_ID}/${HOST_ID}/\" > \"Injector/Processed-Info.plist\"\n\ncat \"Injector/Launchd.plist\" | sed -e \"s/\\${HELPER_ID}/${HELPER_ID}/\" | sed -e \"s/\\${HELPER_SIGNING}/${HELPER_SIGNING}/\" > \"Injector/Processed-Launchd.plist\"\n";
+			shellScript = "cat \"Injector/Info.plist\" | sed -e \"s/\\${INJECTOR_ID}/${INJECTOR_ID}/\" | sed -e \"s/\\${INJECTOR_SIGNING}/${INJECTOR_SIGNING}/\" | sed -e \"s/\\${HOST_ID}/${HOST_ID}/\" > \"Injector/Processed-Info.plist\"\n\ncat \"Injector/Launchd.plist\" | sed -e \"s/\\${INJECTOR_ID}/${INJECTOR_ID}/\" | sed -e \"s/\\${INJECTOR_SIGNING}/${INJECTOR_SIGNING}/\" > \"Injector/Processed-Launchd.plist\"\n";
 		};
 		222B290B149A5F2600DF7EB2 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -379,7 +379,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cat \"Host/Info.plist\" | sed -e \"s/\\${HELPER_ID}/${HELPER_ID}/\" | sed -e \"s/\\${HELPER_SIGNING}/${HELPER_SIGNING}/\" > \"Host/Processed-Info.plist\"\n";
+			shellScript = "cat \"Host/Info.plist\" | sed -e \"s/\\${INJECTOR_ID}/${HELPER_ID}/\" | sed -e \"s/\\${INJECTOR_SIGNING}/${INJECTOR_SIGNING}/\" > \"Host/Processed-Info.plist\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

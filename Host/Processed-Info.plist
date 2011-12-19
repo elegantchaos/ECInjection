@@ -22,8 +22,8 @@
 	<string>NSApplication</string>
 	<key>SMPrivilegedExecutables</key>
 	<dict>
-		<key>${INJECTOR_ID}</key>
-		<string>identifier ${INJECTOR_ID} and certificate leaf[subject.CN] = &quot;${INJECTOR_SIGNING}&quot;</string>
+		<key></key>
+		<string>identifier  and certificate leaf[subject.CN] = &quot;3rd Party Mac Developer Application: Sam Deane&quot;</string>
 	</dict>
 </dict>
 </plist>
