@@ -22,8 +22,8 @@
 	<string>NSApplication</string>
 	<key>SMPrivilegedExecutables</key>
 	<dict>
-		<key></key>
-		<string>identifier  and certificate leaf[subject.CN] = &quot;3rd Party Mac Developer Application: Sam Deane&quot;</string>
+		<key>com.elegantchaos.injection.injector</key>
+		<string>identifier com.elegantchaos.injection.injector and certificate leaf[subject.CN] = &quot;3rd Party Mac Developer Application: Sam Deane&quot;</string>
 	</dict>
 </dict>
 </plist>

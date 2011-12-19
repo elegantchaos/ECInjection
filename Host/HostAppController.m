@@ -225,7 +225,7 @@
     Injector* injector = [self injector];
     NSURL* bundleURL = [[NSBundle mainBundle] URLForResource:@"injected" withExtension:@"bundle"];
     OSStatus result = [injector injectBundleAtURL:bundleURL intoApplicationWithId:@"com.apple.finder"];
-    if (result)
+    if (result == noErr)
     {
         NSLog(@"injected ok");
     }
