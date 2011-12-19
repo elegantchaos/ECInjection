@@ -11,9 +11,10 @@
 		22426153149FB8E800DB6C53 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2242614F149FB8E700DB6C53 /* main.m */; };
 		22426179149FC61E00DB6C53 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224E7D92149A26C60063A520 /* CoreFoundation.framework */; };
 		22426186149FC6D300DB6C53 /* Injected.m in Sources */ = {isa = PBXBuildFile; fileRef = 22426185149FC6D300DB6C53 /* Injected.m */; };
-		22426188149FC71900DB6C53 /* Injected.plist in Resources */ = {isa = PBXBuildFile; fileRef = 22426187149FC71800DB6C53 /* Injected.plist */; };
 		22426193149FD07F00DB6C53 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 227E267E149B54F900E04B27 /* AppKit.framework */; };
 		22426194149FD0DA00DB6C53 /* mach_inject_bundle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2242616F149FC57D00DB6C53 /* mach_inject_bundle.framework */; };
+		22426199149FD4DD00DB6C53 /* injected.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 22426178149FC61E00DB6C53 /* injected.bundle */; };
+		2242619A149FD60500DB6C53 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2266420C149A9634003B7019 /* Foundation.framework */; };
 		2266420D149A9634003B7019 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2266420C149A9634003B7019 /* Foundation.framework */; };
 		227E267F149B54F900E04B27 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 227E267E149B54F900E04B27 /* AppKit.framework */; };
 		227E2680149B552000E04B27 /* ReadMe.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 22929E3B149A729000E06226 /* ReadMe.markdown */; };
@@ -39,6 +40,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = mach_inject_bundle;
+		};
+		22426195149FD48A00DB6C53 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 22426177149FC61E00DB6C53;
+			remoteInfo = injected;
 		};
 		4BE4907E1044624F006BE471 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -106,6 +114,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2242619A149FD60500DB6C53 /* Foundation.framework in Frameworks */,
 				22426179149FC61E00DB6C53 /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -268,6 +277,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				22426196149FD48A00DB6C53 /* PBXTargetDependency */,
 				4BE4907F1044624F006BE471 /* PBXTargetDependency */,
 			);
 			name = host;
@@ -323,7 +333,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22426188149FC71900DB6C53 /* Injected.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,6 +340,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22426199149FD4DD00DB6C53 /* injected.bundle in Resources */,
 				BF65C19111B985C0007C20AB /* MainMenu.xib in Resources */,
 				227E2680149B552000E04B27 /* ReadMe.markdown in Resources */,
 			);
@@ -408,6 +418,11 @@
 			name = mach_inject_bundle;
 			targetProxy = 22426172149FC5B900DB6C53 /* PBXContainerItemProxy */;
 		};
+		22426196149FD48A00DB6C53 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 22426177149FC61E00DB6C53 /* injected */;
+			targetProxy = 22426195149FD48A00DB6C53 /* PBXContainerItemProxy */;
+		};
 		4BE4907F1044624F006BE471 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4BE4905C10445E0A006BE471 /* injector */;
@@ -424,8 +439,7 @@
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "injected bundle/injected bundle-Prefix.pch";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -450,8 +464,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "injected bundle/injected bundle-Prefix.pch";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
