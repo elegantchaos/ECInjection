@@ -379,7 +379,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cat \"Host/Info.plist\" | sed -e \"s/\\${INJECTOR_ID}/${HELPER_ID}/\" | sed -e \"s/\\${INJECTOR_SIGNING}/${INJECTOR_SIGNING}/\" > \"Host/Processed-Info.plist\"\n";
+			shellScript = "cat \"Host/Info.plist\" | sed -e \"s/\\${INJECTOR_ID}/${INJECTOR_ID}/\" | sed -e \"s/\\${INJECTOR_SIGNING}/${INJECTOR_SIGNING}/\" > \"Host/Processed-Info.plist\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
