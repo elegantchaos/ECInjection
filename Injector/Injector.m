@@ -163,8 +163,10 @@ mach_inject_bundle_pid(
 
 - (OSStatus)injectBundleAtURL:(NSURL *)bundleURLIn intoApplicationWithId:(NSString *)appIdIn
 {
-    NSString* appId = [NSString stringWithString:appId];
-    NSURL* bundleURL = [NSURL fileURLWithPath: [bundleURL path]];
+    asl_log(aslClient, aslMsg, ASL_LEVEL_NOTICE, "running as uid:%d euid:%d gid:%d", getuid(), geteuid(), getgid());
+
+    NSString* appId = [NSString stringWithString:appIdIn];
+    NSURL* bundleURL = [NSURL fileURLWithPath: [bundleURLIn path]];
     OSStatus result = noErr;
     pid_t process_id = [self processWithId:appId];
     if (process_id)
