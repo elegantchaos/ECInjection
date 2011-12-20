@@ -12,20 +12,25 @@
 
 #import "HostAppController.h"
 #import "Injector.h"
+#import "Injected.h"
 
 @interface HostAppController()
 
 #pragma mark - Private Properties
 
-@property (nonatomic, retain) NSConnection* connection;
+@property (nonatomic, retain) NSConnection* injectedConnection;
+@property (nonatomic, retain) NSString* injectedID;
+@property (nonatomic, retain) NSConnection* injectorConnection;
 @property (nonatomic, retain) NSString* injectorID;
 
 #pragma mark - Private Methods
 
 - (Injector*)injector;
+- (Injected*)injected;
 - (OSStatus)setupAuthorization:(AuthorizationRef*)authRef;
 - (NSError*)installInjectorApplication;
 - (void)setStatus:(NSString*)status error:(NSError*)error;
+- (void)updateUI;
 
 @end
 
@@ -35,9 +40,12 @@
 
 #pragma mark - Properties
 
-@synthesize connection;
+@synthesize injectedConnection;
+@synthesize injectedID;
+@synthesize injectorConnection;
 @synthesize injectorID;
 @synthesize label;
+@synthesize targetBundleID;
 
 #pragma mark - Object Lifecycle
 
@@ -47,8 +55,11 @@
 
 - (void)dealloc 
 {
-    [connection release];
+    [injectedConnection release];
+    [injectedID release];
+    [injectorConnection release];
     [injectorID release];
+    [targetBundleID release];
     
     [super dealloc];
 }
@@ -61,42 +72,31 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
-    // try to install ("bless") the helper tool
-    // this will copy it into the right place and set up the launchd plist (if it isn't already there)
-    NSError* error = [self installInjectorApplication];
-	if (!error)
-    {
-        // it worked - try to communicate with it
-		[self setStatus:@"Injector is available" error:error];
-        Injector* injector = [self injector];
-        if (injector)
-        {
-            // we got a connection to it
-            [self setStatus:[NSString stringWithFormat:@"Injector is running"] error:error];
-        }
-        else
-        {
-            // failed to get a connection, that might just be because it's not started
-            [self setStatus:@"Injector is installed, but not running" error:error];
-        }
-	}
-    else
-    {
-        // it didn't work
-        [self setStatus:@"Injector could not be installed" error:error];
-	} 
-}
+    // look up the injector bundle id in our plist
+    // (we're assuming that it's the one and only key inside the SMPrivilegedExecutables dictionary)
+    NSDictionary* helpers = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"SMPrivilegedExecutables"];
+    self.injectorID = [[helpers allKeys] objectAtIndex:0];
+    
+    // look up the injected bundle id
+    NSURL* bundleURL = [[NSBundle mainBundle] URLForResource:@"injected" withExtension:@"bundle" subdirectory:@"Injection"];
+    self.injectedID = [[NSBundle bundleWithURL:bundleURL] bundleIdentifier];
 
-// --------------------------------------------------------------------------
-//! Cleanup before shutdown.
-// --------------------------------------------------------------------------
-
-- (void)applicationWillTerminate:(NSNotification *)notification
-{
-    self.connection = nil;
+    self.targetBundleID = @"com.apple.finder";
+    [self updateUI];
 }
 
 #pragma mark - Utilities
+
+- (void)updateUI
+{
+    Injected* injected = [self injected];
+    Injector* injector = [self injector];
+    
+    NSString* injectedStatus = injected ? @"Injected code running." : @"Injected code not found";
+    NSString* injectorStatus = injector ? @"Injector is running." : @"Injector not found";
+    
+    [self setStatus:[NSString stringWithFormat:@"%@\n%@", injectedStatus, injectorStatus] error:nil];
+}
 
 // --------------------------------------------------------------------------
 //! Update the UI with some status info.
@@ -145,11 +145,6 @@
 
 - (NSError*)installInjectorApplication
 {
-    // look up the injector bundle id in our plist
-    // (we're assuming that it's the one and only key inside the SMPrivilegedExecutables dictionary)
-    NSDictionary* helpers = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"SMPrivilegedExecutables"];
-    self.injectorID = [[helpers allKeys] objectAtIndex:0];
-
 	// Obtain the right to install privileged helper tools (kSMRightBlessPrivilegedHelper).
     NSError* error = nil;
 	AuthorizationRef authRef;
@@ -167,7 +162,8 @@
     {
         error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:[NSDictionary dictionaryWithObject:@"failed to get authorisation" forKey:NSLocalizedFailureReasonErrorKey]];
 	} 
-	
+
+    
 	return error;
 }
 
@@ -184,33 +180,109 @@
 {
     Injector* injector = nil;
     
-    if (!self.connection)
+    @try 
     {
-        // Lookup the server connection
-        self.connection = [NSConnection connectionWithRegisteredName:self.injectorID host:nil];
-        if (!self.connection)
+        if (!self.injectorConnection)
         {
-            NSLog(@"%@ server: could not find server.  You need to start one on this machine first.\n", self.injectorID);
-        }
-        else
-        {
-            [self.connection setRequestTimeout:10.0];
-            [self.connection setReplyTimeout:10.0];
-        }
-    }
-
-    if (self.connection)
-    {
-        NSDistantObject *proxy = [self.connection rootProxy];
-        if (!proxy) 
-        {
-            NSLog(@"could not get proxy");
+            // Lookup the server connection
+            self.injectorConnection = [NSConnection connectionWithRegisteredName:self.injectorID host:nil];
+            if (!self.injectorConnection)
+            {
+                NSLog(@"%@ server: could not find server.  You need to start one on this machine first.\n", self.injectorID);
+            }
+            else
+            {
+                [self.injectorConnection setRequestTimeout:10.0];
+                [self.injectorConnection setReplyTimeout:10.0];
+            }
         }
         
-        injector = (Injector*)proxy;
+        if (self.injectorConnection)
+        {
+            NSDistantObject *proxy = [self.injectorConnection rootProxy];
+            if (!proxy) 
+            {
+                NSLog(@"could not get proxy");
+            }
+            
+            injector = (Injector*)proxy;
+        }
+    }
+    @catch (NSException *exception) 
+    {
+        NSLog(@"exception thrown whilst trying to connect to injector: %@", exception);
     }
 
     return injector;
+}
+
+// --------------------------------------------------------------------------
+//! Return a proxy to the injected code.
+//! Sets up the connection when it's first called.
+//! Returns nil if it can't connect for any reason
+//! (eg the code isn't injected)
+// --------------------------------------------------------------------------
+
+- (Injected*)injected
+{
+    Injected* injected = nil;
+    
+    @try
+    {
+        if (!self.injectedConnection)
+        {
+            // Lookup the server connection
+            self.injectedConnection = [NSConnection connectionWithRegisteredName:self.injectedID host:nil];
+            if (!self.injectedConnection)
+            {
+                NSLog(@"%@ server: could not find server.  You need to start one on this machine first.\n", self.injectedID);
+            }
+            else
+            {
+                [self.injectedConnection setRequestTimeout:10.0];
+                [self.injectedConnection setReplyTimeout:10.0];
+            }
+        }
+        
+        if (self.injectedConnection)
+        {
+            NSDistantObject *proxy = [self.injectedConnection rootProxy];
+            if (!proxy) 
+            {
+                NSLog(@"could not get proxy");
+            }
+            
+            injected = (Injected*)proxy;
+        }
+    }
+    @catch (NSException *exception) 
+    {
+        NSLog(@"exception thrown whilst trying to connect to injected: %@", exception);
+    }
+
+    return injected;
+}
+
+// --------------------------------------------------------------------------
+//! Install the injector.
+// --------------------------------------------------------------------------
+
+- (IBAction)install:(id)sender
+{
+    // try to install ("bless") the helper tool
+    // this will copy it into the right place and set up the launchd plist (if it isn't already there)
+    NSError* error = [self installInjectorApplication];
+	if (!error)
+    {
+        // it worked - try to communicate with it
+        [self updateUI];
+	}
+    else
+    {
+        // it didn't work
+        [self setStatus:@"Injector could not be installed" error:error];
+	} 
+
 }
 
 // --------------------------------------------------------------------------
@@ -223,7 +295,7 @@
 {
     Injector* injector = [self injector];
     NSString* bundlePath = [[NSBundle mainBundle] pathForResource:@"injected" ofType:@"bundle" inDirectory:@"Injection"];
-    OSStatus result = [injector injectBundleAtPath:bundlePath intoApplicationWithId:@"com.apple.finder"];
+    OSStatus result = [injector injectBundleAtPath:bundlePath intoApplicationWithId:targetBundleID];
     if (result == noErr)
     {
         NSLog(@"injected ok");

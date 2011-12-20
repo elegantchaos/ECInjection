@@ -12,7 +12,9 @@
 @interface HostAppController : NSObject<NSApplicationDelegate>
 
 @property (nonatomic, assign) IBOutlet NSTextField* label;
+@property (nonatomic, retain) NSString* targetBundleID;
 
+- (IBAction)install:(id)sender;
 - (IBAction)inject:(id)sender;
 
 @end
