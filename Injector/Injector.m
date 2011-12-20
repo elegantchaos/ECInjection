@@ -9,11 +9,11 @@
 
 #import "Injector.h"
 
-#import <asl.h>
+#import "ECASLClient.h"
 
 #include <CoreServices/CoreServices.h>
 #include <Foundation/Foundation.h>
-#include <AppKit/AppKit.h>
+//#include <AppKit/AppKit.h>
 #include <AppKit/NSRunningApplication.h>
 
 #include "mach_inject.h"
@@ -26,10 +26,7 @@
 
 #pragma mark - Private Properties
 
-@property (nonatomic, assign) aslclient aslClient;
-@property (nonatomic, assign) aslmsg aslMsg;
-@property (nonatomic, retain) NSString* tempAppId;
-@property (nonatomic, retain) NSURL* tempBundleURL;
+@property (nonatomic, retain) ECASLClient *asl;
 
 @end
 
@@ -37,26 +34,20 @@
 
 #pragma mark - Properties
 
-@synthesize aslClient;
-@synthesize aslMsg;
-@synthesize tempAppId;
-@synthesize tempBundleURL;
+@synthesize asl;
 
 #pragma mark - Object Lifecycle
 
 // --------------------------------------------------------------------------
-//! Set up ASL connection etc.
+//! Set up.
 // --------------------------------------------------------------------------
 
-- (id)initWithName:(NSString *)name
+- (id)initWithASL:(ECASLClient *)aslIn
 {
     if ((self = [super init]) != nil)
     {
-        
-       const char* name_c = [name UTF8String];
-       self.aslClient = asl_open(name_c, "Injector", ASL_OPT_STDERR);
-        self.aslMsg = asl_new(ASL_TYPE_MSG);
-        asl_log(self.aslClient, aslMsg, ASL_LEVEL_NOTICE, "injector initialised");
+        self.asl = aslIn;
+        [aslIn log:@"injector initialised"];
     }
     
     return self;
@@ -68,30 +59,9 @@
 
 - (void)dealloc 
 {
-    asl_free(self.aslMsg);
-    asl_close(self.aslClient);
+    [asl release];
     
     [super dealloc];
-}
-
-#pragma mark - Logging
-
-// --------------------------------------------------------------------------
-//! Log to ASL.
-// --------------------------------------------------------------------------
-
-- (void)log:(NSString *)msg
-{
-    asl_log(self.aslClient, self.aslMsg, ASL_LEVEL_NOTICE, "%s", [msg UTF8String]);
-}
-
-// --------------------------------------------------------------------------
-//! Log error to asl.
-// --------------------------------------------------------------------------
-
-- (void)error:(NSString *)msg
-{
-    asl_log(self.aslClient, self.aslMsg, ASL_LEVEL_ERR, "%s", [msg UTF8String]);
 }
 
 #pragma mark - Injection
@@ -134,7 +104,7 @@
         CFBundleRef injectionBundle = CFBundleCreate( kCFAllocatorDefault, (CFURLRef) injectionURL);
         if( !injectionBundle )
         {
-            [self error:@"failed to load injection bundle"];
+            [self.asl error:@"failed to load injection bundle"];
             result = kErrorCouldntLoadInjectionBundle;
         }
 
@@ -142,7 +112,7 @@
         void* injectionCode = CFBundleGetFunctionPointerForName((CFBundleRef) injectionBundle, CFSTR( INJECT_ENTRY_SYMBOL ));
         if( injectionCode == NULL )
         {
-            [self error:@"failed to find injection entry symbol"];
+            [self.asl error:@"failed to find injection entry symbol"];
             result = kErrorCouldntFindInjectEntrySymbol;
         }
 
@@ -160,14 +130,14 @@
             free( param );
             if (result != err_none)
             {
-                [self error:[NSString stringWithFormat:@"injection failed with error %d", result]];
+                [self.asl error:@"injection failed with error %d", result];
             }
         }
     }
     else
     {
         result = kErrorCouldntFindProcess;
-        [self error:[NSString stringWithFormat:@"couldn't find process with id %@", appId]];
+        [self.asl error:@"couldn't find process with id %@", appId];
     }
     
     return result;

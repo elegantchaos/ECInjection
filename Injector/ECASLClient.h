@@ -8,22 +8,13 @@
 // --------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-#import <mach/error.h>
 
-#pragma mark - Injection Errors
+@interface ECASLClient : NSObject
 
-enum
-{
-    kErrorCouldntFindProcess                = (err_local + 1),
-    kErrorCouldntLoadInjectionBundle,
-    kErrorCouldntFindInjectEntrySymbol
-};
+- (id)initWithName:(NSString*)name;
 
-@class ECASLClient;
-
-@interface Injector : NSObject
-
-- (id)initWithASL:(ECASLClient*)asl;
-- (OSStatus)injectBundleAtPath:(NSString*)bundlePath intoApplicationWithId:(NSString*)appId;
+- (void)logAtLevel:(int)level withFormat:(NSString*)format, ... NS_FORMAT_FUNCTION(2,3);
+- (void)log:(NSString*)format, ... NS_FORMAT_FUNCTION(1,2);
+- (void)error:(NSString*)format, ... NS_FORMAT_FUNCTION(1,2);
 
 @end

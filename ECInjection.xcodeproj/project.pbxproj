@@ -18,6 +18,7 @@
 		224261B514A00E5F00DB6C53 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224E7D92149A26C60063A520 /* CoreFoundation.framework */; };
 		224261BD14A0978E00DB6C53 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 227E267E149B54F900E04B27 /* AppKit.framework */; };
 		224261C214A0A4AB00DB6C53 /* mach_inject_bundle_stub.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 224261AF14A0041100DB6C53 /* mach_inject_bundle_stub.bundle */; };
+		224261C514A0A91F00DB6C53 /* ECASLClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 224261C414A0A91E00DB6C53 /* ECASLClient.m */; };
 		2266420D149A9634003B7019 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2266420C149A9634003B7019 /* Foundation.framework */; };
 		227E267F149B54F900E04B27 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 227E267E149B54F900E04B27 /* AppKit.framework */; };
 		227E2680149B552000E04B27 /* ReadMe.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 22929E3B149A729000E06226 /* ReadMe.markdown */; };
@@ -119,6 +120,8 @@
 		224261A714A003DE00DB6C53 /* mach_inject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mach_inject.h; path = mach_star/mach_inject/mach_inject.h; sourceTree = "<group>"; };
 		224261AA14A0041000DB6C53 /* mach_inject_bundle_stub.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mach_inject_bundle_stub.xcodeproj; path = mach_star/mach_inject_bundle_stub/mach_inject_bundle_stub.xcodeproj; sourceTree = "<group>"; };
 		224261B014A0048900DB6C53 /* mach_inject_bundle_stub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mach_inject_bundle_stub.h; path = mach_star/mach_inject_bundle_stub/mach_inject_bundle_stub.h; sourceTree = "<group>"; };
+		224261C314A0A91E00DB6C53 /* ECASLClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ECASLClient.h; sourceTree = "<group>"; };
+		224261C414A0A91E00DB6C53 /* ECASLClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ECASLClient.m; sourceTree = "<group>"; };
 		224E7D92149A26C60063A520 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		2266420C149A9634003B7019 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		227E267C149B53AA00E04B27 /* Settings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Settings.xcconfig; sourceTree = "<group>"; };
@@ -182,6 +185,8 @@
 		2242614A149FB8E700DB6C53 /* Injector */ = {
 			isa = PBXGroup;
 			children = (
+				224261C314A0A91E00DB6C53 /* ECASLClient.h */,
+				224261C414A0A91E00DB6C53 /* ECASLClient.m */,
 				2242614C149FB8E700DB6C53 /* Injector.h */,
 				2242614D149FB8E700DB6C53 /* Injector.m */,
 				2242614B149FB8E700DB6C53 /* info.plist */,
@@ -446,6 +451,7 @@
 				22426152149FB8E800DB6C53 /* Injector.m in Sources */,
 				22426153149FB8E800DB6C53 /* main.m in Sources */,
 				224261A814A003DE00DB6C53 /* mach_inject.c in Sources */,
+				224261C514A0A91F00DB6C53 /* ECASLClient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,7 +502,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				INFOPLIST_FILE = Injector/Injected.plist;
+				INFOPLIST_FILE = Injected/Injected.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -516,7 +522,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				INFOPLIST_FILE = Injector/Injected.plist;
+				INFOPLIST_FILE = Injected/Injected.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";

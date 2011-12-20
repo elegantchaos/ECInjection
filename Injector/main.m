@@ -14,6 +14,7 @@
 #import <unistd.h>
 
 #import "Injector.h"
+#import "ECASLClient.h"
 
 #import <Foundation/Foundation.h>
 
@@ -26,8 +27,9 @@ int main(int argc, const char * argv[])
         const char* name_c = [name UTF8String];
 
         // make a helper object - this is what we'll publish with the connection
-        Injector* injector = [[Injector alloc] initWithName:name];
-
+        ECASLClient* asl = [[ECASLClient alloc] initWithName:name];
+        Injector* injector = [[Injector alloc] initWithASL:asl];
+    
         // get the mach port to use from launchd
         mach_port_t mp;
         mach_port_t bootstrap_port;
@@ -35,7 +37,7 @@ int main(int argc, const char * argv[])
         kern_return_t result = bootstrap_check_in(bootstrap_port, name_c, &mp);
         if (result != err_none)
         {
-            [injector error:@"unable to get bootstrap port"];
+            [asl error:@"unable to get bootstrap port"];
             exit(1);
         }
 
@@ -49,9 +51,10 @@ int main(int argc, const char * argv[])
         [[NSRunLoop currentRunLoop] run];
         
         // cleanup
-        [injector log:@"injector finishing"];
+        [asl log:@"injector finishing"];
         [server release];
         [injector release];
+        [asl release];
     }
     
     return 0;
