@@ -161,20 +161,10 @@ mach_inject_bundle_pid(
     return result;
 }
 
-- (OSStatus)injectBundleAtURL:(NSURL *)bundleURL intoApplicationWithId:(NSString *)appId
+- (OSStatus)injectBundleAtURL:(NSURL *)bundleURLIn intoApplicationWithId:(NSString *)appIdIn
 {
-    self.tempAppId = [NSString stringWithString:appId];
-    self.tempBundleURL = [NSURL fileURLWithPath: [bundleURL path]];
-    [self performSelector:@selector(delayedInjectBundle) withObject:nil afterDelay:1.0];
-
-    return 0;
-}
-
-- (OSStatus)delayedInjectBundle
-{
-    NSURL* bundleURL = self.tempBundleURL;
-    NSString* appId = self.tempAppId;
-    
+    NSString* appId = [NSString stringWithString:appId];
+    NSURL* bundleURL = [NSURL fileURLWithPath: [bundleURL path]];
     OSStatus result = noErr;
     pid_t process_id = [self processWithId:appId];
     if (process_id)
