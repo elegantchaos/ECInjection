@@ -220,8 +220,7 @@
 				22426184149FC6D300DB6C53 /* Injected.h */,
 				22426185149FC6D300DB6C53 /* Injected.m */,
 			);
-			name = Injected;
-			path = Injector;
+			path = Injected;
 			sourceTree = "<group>";
 		};
 		29B97314FDCFA39411CA2CEA /* SMJobBless */ = {
