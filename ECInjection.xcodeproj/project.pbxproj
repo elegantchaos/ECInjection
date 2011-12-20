@@ -14,8 +14,10 @@
 		22426193149FD07F00DB6C53 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 227E267E149B54F900E04B27 /* AppKit.framework */; };
 		2242619A149FD60500DB6C53 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2266420C149A9634003B7019 /* Foundation.framework */; };
 		2242619E149FFED700DB6C53 /* injected.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 22426178149FC61E00DB6C53 /* injected.bundle */; };
-		224261A214A001D800DB6C53 /* mach_inject_bundle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2242616F149FC57D00DB6C53 /* mach_inject_bundle.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		224261A514A0020400DB6C53 /* mach_inject_bundle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2242616F149FC57D00DB6C53 /* mach_inject_bundle.framework */; };
+		224261A814A003DE00DB6C53 /* mach_inject.c in Sources */ = {isa = PBXBuildFile; fileRef = 224261A614A003DD00DB6C53 /* mach_inject.c */; };
+		224261B414A0069B00DB6C53 /* mach_inject_bundle_stub.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 224261AF14A0041100DB6C53 /* mach_inject_bundle_stub.bundle */; };
+		224261B514A00E5F00DB6C53 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224E7D92149A26C60063A520 /* CoreFoundation.framework */; };
+		224261B714A0170400DB6C53 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224261B614A0170300DB6C53 /* Cocoa.framework */; };
 		2266420D149A9634003B7019 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2266420C149A9634003B7019 /* Foundation.framework */; };
 		227E267F149B54F900E04B27 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 227E267E149B54F900E04B27 /* AppKit.framework */; };
 		227E2680149B552000E04B27 /* ReadMe.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 22929E3B149A729000E06226 /* ReadMe.markdown */; };
@@ -28,13 +30,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		2242616E149FC57D00DB6C53 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 22426163149FC57C00DB6C53 /* mach_inject_bundle.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
-			remoteInfo = mach_inject_bundle;
-		};
 		22426195149FD48A00DB6C53 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -42,19 +37,19 @@
 			remoteGlobalIDString = 22426177149FC61E00DB6C53;
 			remoteInfo = injected;
 		};
-		224261A014A001C900DB6C53 /* PBXContainerItemProxy */ = {
+		224261AE14A0041100DB6C53 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 22426163149FC57C00DB6C53 /* mach_inject_bundle.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = mach_inject_bundle;
+			containerPortal = 224261AA14A0041000DB6C53 /* mach_inject_bundle_stub.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8D01CCD20486CAD60068D4B7;
+			remoteInfo = mach_inject_bundle_stub;
 		};
-		224261A314A001F800DB6C53 /* PBXContainerItemProxy */ = {
+		224261B214A0069100DB6C53 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 22426163149FC57C00DB6C53 /* mach_inject_bundle.xcodeproj */;
+			containerPortal = 224261AA14A0041000DB6C53 /* mach_inject_bundle_stub.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = mach_inject_bundle;
+			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7;
+			remoteInfo = mach_inject_bundle_stub;
 		};
 		4BE4907E1044624F006BE471 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -72,7 +67,7 @@
 			dstPath = Injection;
 			dstSubfolderSpec = 7;
 			files = (
-				224261A514A0020400DB6C53 /* mach_inject_bundle.framework in CopyFiles */,
+				224261B414A0069B00DB6C53 /* mach_inject_bundle_stub.bundle in CopyFiles */,
 				2242619E149FFED700DB6C53 /* injected.bundle in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -107,11 +102,15 @@
 		2242614F149FB8E700DB6C53 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		22426150149FB8E700DB6C53 /* Processed-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Processed-Info.plist"; sourceTree = "<group>"; };
 		22426151149FB8E700DB6C53 /* Processed-Launchd.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Processed-Launchd.plist"; sourceTree = "<group>"; };
-		22426163149FC57C00DB6C53 /* mach_inject_bundle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mach_inject_bundle.xcodeproj; path = mach_star/mach_inject_bundle/mach_inject_bundle.xcodeproj; sourceTree = "<group>"; };
 		22426178149FC61E00DB6C53 /* injected.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = injected.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		22426184149FC6D300DB6C53 /* Injected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Injected.h; sourceTree = "<group>"; };
 		22426185149FC6D300DB6C53 /* Injected.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Injected.m; sourceTree = "<group>"; };
 		22426187149FC71800DB6C53 /* Injected.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Injected.plist; sourceTree = "<group>"; };
+		224261A614A003DD00DB6C53 /* mach_inject.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = mach_inject.c; path = mach_star/mach_inject/mach_inject.c; sourceTree = "<group>"; };
+		224261A714A003DE00DB6C53 /* mach_inject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mach_inject.h; path = mach_star/mach_inject/mach_inject.h; sourceTree = "<group>"; };
+		224261AA14A0041000DB6C53 /* mach_inject_bundle_stub.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = mach_inject_bundle_stub.xcodeproj; path = mach_star/mach_inject_bundle_stub/mach_inject_bundle_stub.xcodeproj; sourceTree = "<group>"; };
+		224261B014A0048900DB6C53 /* mach_inject_bundle_stub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mach_inject_bundle_stub.h; path = mach_star/mach_inject_bundle_stub/mach_inject_bundle_stub.h; sourceTree = "<group>"; };
+		224261B614A0170300DB6C53 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		224E7D92149A26C60063A520 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		2266420C149A9634003B7019 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		227E267C149B53AA00E04B27 /* Settings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Settings.xcconfig; sourceTree = "<group>"; };
@@ -142,7 +141,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				224261A214A001D800DB6C53 /* mach_inject_bundle.framework in Frameworks */,
+				224261B714A0170400DB6C53 /* Cocoa.framework in Frameworks */,
+				224261B514A00E5F00DB6C53 /* CoreFoundation.framework in Frameworks */,
 				22426193149FD07F00DB6C53 /* AppKit.framework in Frameworks */,
 				2266420D149A9634003B7019 /* Foundation.framework in Frameworks */,
 			);
@@ -182,17 +182,28 @@
 				2242614E149FB8E700DB6C53 /* Launchd.plist */,
 				22426187149FC71800DB6C53 /* Injected.plist */,
 				2242614F149FB8E700DB6C53 /* main.m */,
+				224261A914A003E300DB6C53 /* mach_inject */,
 				22426150149FB8E700DB6C53 /* Processed-Info.plist */,
 				22426151149FB8E700DB6C53 /* Processed-Launchd.plist */,
-				22426163149FC57C00DB6C53 /* mach_inject_bundle.xcodeproj */,
+				224261AA14A0041000DB6C53 /* mach_inject_bundle_stub.xcodeproj */,
 			);
 			path = Injector;
 			sourceTree = "<group>";
 		};
-		22426164149FC57C00DB6C53 /* Products */ = {
+		224261A914A003E300DB6C53 /* mach_inject */ = {
 			isa = PBXGroup;
 			children = (
-				2242616F149FC57D00DB6C53 /* mach_inject_bundle.framework */,
+				224261A614A003DD00DB6C53 /* mach_inject.c */,
+				224261A714A003DE00DB6C53 /* mach_inject.h */,
+				224261B014A0048900DB6C53 /* mach_inject_bundle_stub.h */,
+			);
+			name = mach_inject;
+			sourceTree = "<group>";
+		};
+		224261AB14A0041000DB6C53 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				224261AF14A0041100DB6C53 /* mach_inject_bundle_stub.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -200,6 +211,7 @@
 		29B97314FDCFA39411CA2CEA /* SMJobBless */ = {
 			isa = PBXGroup;
 			children = (
+				224261B614A0170300DB6C53 /* Cocoa.framework */,
 				22929E3B149A729000E06226 /* ReadMe.markdown */,
 				227E267C149B53AA00E04B27 /* Settings.xcconfig */,
 				2242614A149FB8E700DB6C53 /* Injector */,
@@ -276,7 +288,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				224261A114A001C900DB6C53 /* PBXTargetDependency */,
 			);
 			name = injector;
 			productName = SMJobBlessHelper;
@@ -297,7 +308,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				224261A414A001F800DB6C53 /* PBXTargetDependency */,
+				224261B314A0069100DB6C53 /* PBXTargetDependency */,
 				22426196149FD48A00DB6C53 /* PBXTargetDependency */,
 				4BE4907F1044624F006BE471 /* PBXTargetDependency */,
 			);
@@ -326,8 +337,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 22426164149FC57C00DB6C53 /* Products */;
-					ProjectRef = 22426163149FC57C00DB6C53 /* mach_inject_bundle.xcodeproj */;
+					ProductGroup = 224261AB14A0041000DB6C53 /* Products */;
+					ProjectRef = 224261AA14A0041000DB6C53 /* mach_inject_bundle_stub.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -340,11 +351,11 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		2242616F149FC57D00DB6C53 /* mach_inject_bundle.framework */ = {
+		224261AF14A0041100DB6C53 /* mach_inject_bundle_stub.bundle */ = {
 			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = mach_inject_bundle.framework;
-			remoteRef = 2242616E149FC57D00DB6C53 /* PBXContainerItemProxy */;
+			fileType = wrapper.cfbundle;
+			path = mach_inject_bundle_stub.bundle;
+			remoteRef = 224261AE14A0041100DB6C53 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -418,6 +429,7 @@
 			files = (
 				22426152149FB8E800DB6C53 /* Injector.m in Sources */,
 				22426153149FB8E800DB6C53 /* main.m in Sources */,
+				224261A814A003DE00DB6C53 /* mach_inject.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,15 +450,10 @@
 			target = 22426177149FC61E00DB6C53 /* injected */;
 			targetProxy = 22426195149FD48A00DB6C53 /* PBXContainerItemProxy */;
 		};
-		224261A114A001C900DB6C53 /* PBXTargetDependency */ = {
+		224261B314A0069100DB6C53 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = mach_inject_bundle;
-			targetProxy = 224261A014A001C900DB6C53 /* PBXContainerItemProxy */;
-		};
-		224261A414A001F800DB6C53 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = mach_inject_bundle;
-			targetProxy = 224261A314A001F800DB6C53 /* PBXContainerItemProxy */;
+			name = mach_inject_bundle_stub;
+			targetProxy = 224261B214A0069100DB6C53 /* PBXContainerItemProxy */;
 		};
 		4BE4907F1044624F006BE471 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

@@ -39,18 +39,30 @@ int main(int argc, const char * argv[])
             exit(1);
         }
 
-        // set up the connection
-        NSMachPort *receivePort = [[NSMachPort alloc] initWithMachPort:mp];
-        NSConnection*server = [NSConnection connectionWithReceivePort:receivePort sendPort:nil];
-        [receivePort release];
-        [server setRootObject:injector];
-
-        // run
-        [[NSRunLoop currentRunLoop] run];
-
-        // cleanup
-        [injector log:@"injector finishing"];
-        [server release];
+        if (argc == 3)
+        {
+            NSString* bundlePath = [NSString stringWithUTF8String:argv[1]];
+            NSString* appId = [NSString stringWithUTF8String:argv[2]];
+            NSURL* bundleURL = [NSURL fileURLWithPath:bundlePath];
+            OSStatus result = [injector injectBundleAtURL:bundleURL intoApplicationWithId:appId];
+            NSLog(@"result was %d", result);
+        }
+        else
+        {
+            // set up the connection
+            NSMachPort *receivePort = [[NSMachPort alloc] initWithMachPort:mp];
+            NSConnection*server = [NSConnection connectionWithReceivePort:receivePort sendPort:nil];
+            [receivePort release];
+            [server setRootObject:injector];
+            
+            // run
+            [[NSRunLoop currentRunLoop] run];
+            
+            // cleanup
+            [injector log:@"injector finishing"];
+            [server release];
+        }
+        
         [injector release];
     }
     

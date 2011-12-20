@@ -8,6 +8,8 @@
 	<true/>
 	<key>OnDemand</key>
 	<true/>
+	<key>UserName</key>
+	<string>root</string>
 	<key>MachServices</key>
 	<dict>
 		<key>${INJECTOR_ID}</key>
