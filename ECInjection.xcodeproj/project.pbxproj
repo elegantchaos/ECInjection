@@ -15,9 +15,9 @@
 		2242619A149FD60500DB6C53 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2266420C149A9634003B7019 /* Foundation.framework */; };
 		2242619E149FFED700DB6C53 /* injected.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 22426178149FC61E00DB6C53 /* injected.bundle */; };
 		224261A814A003DE00DB6C53 /* mach_inject.c in Sources */ = {isa = PBXBuildFile; fileRef = 224261A614A003DD00DB6C53 /* mach_inject.c */; };
-		224261B414A0069B00DB6C53 /* mach_inject_bundle_stub.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 224261AF14A0041100DB6C53 /* mach_inject_bundle_stub.bundle */; };
 		224261B514A00E5F00DB6C53 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 224E7D92149A26C60063A520 /* CoreFoundation.framework */; };
 		224261BD14A0978E00DB6C53 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 227E267E149B54F900E04B27 /* AppKit.framework */; };
+		224261C214A0A4AB00DB6C53 /* mach_inject_bundle_stub.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 224261AF14A0041100DB6C53 /* mach_inject_bundle_stub.bundle */; };
 		2266420D149A9634003B7019 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2266420C149A9634003B7019 /* Foundation.framework */; };
 		227E267F149B54F900E04B27 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 227E267E149B54F900E04B27 /* AppKit.framework */; };
 		227E2680149B552000E04B27 /* ReadMe.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 22929E3B149A729000E06226 /* ReadMe.markdown */; };
@@ -44,7 +44,7 @@
 			remoteGlobalIDString = 8D01CCD20486CAD60068D4B7;
 			remoteInfo = mach_inject_bundle_stub;
 		};
-		224261B214A0069100DB6C53 /* PBXContainerItemProxy */ = {
+		224261BF14A0A48100DB6C53 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 224261AA14A0041000DB6C53 /* mach_inject_bundle_stub.xcodeproj */;
 			proxyType = 1;
@@ -67,8 +67,17 @@
 			dstPath = Injection;
 			dstSubfolderSpec = 7;
 			files = (
-				224261B414A0069B00DB6C53 /* mach_inject_bundle_stub.bundle in CopyFiles */,
 				2242619E149FFED700DB6C53 /* injected.bundle in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		224261C114A0A49000DB6C53 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Injection;
+			dstSubfolderSpec = 7;
+			files = (
+				224261C214A0A4AB00DB6C53 /* mach_inject_bundle_stub.bundle in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,10 +282,12 @@
 				22426174149FC61E00DB6C53 /* Sources */,
 				22426175149FC61E00DB6C53 /* Frameworks */,
 				22426176149FC61E00DB6C53 /* Resources */,
+				224261C114A0A49000DB6C53 /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				224261C014A0A48100DB6C53 /* PBXTargetDependency */,
 			);
 			name = injected;
 			productName = "injected bundle";
@@ -315,7 +326,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				224261B314A0069100DB6C53 /* PBXTargetDependency */,
 				22426196149FD48A00DB6C53 /* PBXTargetDependency */,
 				4BE4907F1044624F006BE471 /* PBXTargetDependency */,
 			);
@@ -457,10 +467,10 @@
 			target = 22426177149FC61E00DB6C53 /* injected */;
 			targetProxy = 22426195149FD48A00DB6C53 /* PBXContainerItemProxy */;
 		};
-		224261B314A0069100DB6C53 /* PBXTargetDependency */ = {
+		224261C014A0A48100DB6C53 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = mach_inject_bundle_stub;
-			targetProxy = 224261B214A0069100DB6C53 /* PBXContainerItemProxy */;
+			targetProxy = 224261BF14A0A48100DB6C53 /* PBXContainerItemProxy */;
 		};
 		4BE4907F1044624F006BE471 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

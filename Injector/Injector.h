@@ -14,7 +14,7 @@
 
 enum
 {
-    kErrorCouldntFindInjectionBundle	= (err_local + 1),
+    kErrorCouldntFindProcess                = (err_local + 1),
     kErrorCouldntLoadInjectionBundle,
     kErrorCouldntFindInjectEntrySymbol
 };

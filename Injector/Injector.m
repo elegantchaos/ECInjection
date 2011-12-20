@@ -110,7 +110,6 @@
         if ([[app bundleIdentifier] isEqualToString:appId])
         {
             result = [app processIdentifier];
-            asl_log(aslClient, aslMsg, ASL_LEVEL_NOTICE, "found app %s (%d)", [[app localizedName] UTF8String], result);
             break;
         }
     }
@@ -120,8 +119,8 @@
 
 // --------------------------------------------------------------------------
 //! Inject the bundle at a given path into the application with a given id.
-//! We expect to find the mach_inject_bundle_stub bundle in the same
-//! folder as the bundle that we're going to inject.
+//! We expect to find the mach_inject_bundle_stub bundle inside
+//! the bundle that we're going to inject.
 // --------------------------------------------------------------------------
 
 - (OSStatus)injectBundleAtPath:(NSString*)bundlePath intoApplicationWithId:(NSString*)appId
@@ -130,9 +129,8 @@
     pid_t process_id = [self processWithId:appId];
     if (process_id)
     {
-        // get the injection sub bundle
-        NSString* container = [bundlePath stringByDeletingLastPathComponent];
-        NSURL* injectionURL = [NSURL fileURLWithPath:[container stringByAppendingPathComponent:@"mach_inject_bundle_stub.bundle"]];
+        // get the injection stub bundle
+        NSURL* injectionURL = [NSURL fileURLWithPath:[bundlePath stringByAppendingPathComponent:@"Contents/Resources/Injection/mach_inject_bundle_stub.bundle"]];
         CFBundleRef injectionBundle = CFBundleCreate( kCFAllocatorDefault, (CFURLRef) injectionURL);
         if( !injectionBundle )
         {
@@ -165,7 +163,11 @@
                 [self error:[NSString stringWithFormat:@"injection failed with error %d", result]];
             }
         }
-        
+    }
+    else
+    {
+        result = kErrorCouldntFindProcess;
+        [self error:[NSString stringWithFormat:@"couldn't find process with id %@", appId]];
     }
     
     return result;
