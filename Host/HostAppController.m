@@ -187,11 +187,10 @@
     if (!self.connection)
     {
         // Lookup the server connection
-        NSString* name = @"com.elegantchaos.injection.injector";
-        self.connection = [NSConnection connectionWithRegisteredName:name host:nil];
+        self.connection = [NSConnection connectionWithRegisteredName:self.injectorID host:nil];
         if (!self.connection)
         {
-            NSLog(@"%@ server: could not find server.  You need to start one on this machine first.\n", name);
+            NSLog(@"%@ server: could not find server.  You need to start one on this machine first.\n", self.injectorID);
         }
         else
         {
