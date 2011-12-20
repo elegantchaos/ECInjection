@@ -173,13 +173,10 @@
 		2242614A149FB8E700DB6C53 /* Injector */ = {
 			isa = PBXGroup;
 			children = (
-				22426184149FC6D300DB6C53 /* Injected.h */,
-				22426185149FC6D300DB6C53 /* Injected.m */,
 				2242614C149FB8E700DB6C53 /* Injector.h */,
 				2242614D149FB8E700DB6C53 /* Injector.m */,
 				2242614B149FB8E700DB6C53 /* info.plist */,
 				2242614E149FB8E700DB6C53 /* Launchd.plist */,
-				22426187149FC71800DB6C53 /* Injected.plist */,
 				2242614F149FB8E700DB6C53 /* main.m */,
 				224261A914A003E300DB6C53 /* mach_inject */,
 				22426150149FB8E700DB6C53 /* Processed-Info.plist */,
@@ -207,11 +204,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		224261BE14A09E7700DB6C53 /* Injected */ = {
+			isa = PBXGroup;
+			children = (
+				22426187149FC71800DB6C53 /* Injected.plist */,
+				22426184149FC6D300DB6C53 /* Injected.h */,
+				22426185149FC6D300DB6C53 /* Injected.m */,
+			);
+			name = Injected;
+			path = Injector;
+			sourceTree = "<group>";
+		};
 		29B97314FDCFA39411CA2CEA /* SMJobBless */ = {
 			isa = PBXGroup;
 			children = (
 				22929E3B149A729000E06226 /* ReadMe.markdown */,
 				227E267C149B53AA00E04B27 /* Settings.xcconfig */,
+				224261BE14A09E7700DB6C53 /* Injected */,
 				2242614A149FB8E700DB6C53 /* Injector */,
 				4BE4904710445D49006BE471 /* Host */,
 				29B97317FDCFA39411CA2CEA /* Resources */,

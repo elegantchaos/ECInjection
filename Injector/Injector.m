@@ -20,97 +20,33 @@
 #include "mach_inject_bundle_stub.h"
 #include <CoreServices/CoreServices.h>
 
-#define	err_mach_inject_bundle_couldnt_load_framework_bundle	(err_local|1)
-#define	err_mach_inject_bundle_couldnt_find_injection_bundle	(err_local|2)
-#define	err_mach_inject_bundle_couldnt_load_injection_bundle	(err_local|3)
-#define	err_mach_inject_bundle_couldnt_find_inject_entry_symbol	(err_local|4)
 
-#if 0
-mach_error_t
-mach_inject_bundle_pid(
-                       const char	*bundlePackageFileSystemRepresentation,
-                       pid_t		pid )
-{
-	assert( bundlePackageFileSystemRepresentation );
-	assert( pid > 0 );
-	
-	mach_error_t	err = err_none;
-	
-	//	Find the injection bundle by name.
-	CFURLRef injectionURL = NULL;
-	if( !err ) {
-		/*injectionURL = CFURLCreateWithFileSystemPath( kCFAllocatorDefault, CFSTR("mach_inject_bundle_stub.bundle"),
-         kCFURLPOSIXPathStyle, true );*/
-		injectionURL = CFBundleCopyResourceURL( frameworkBundle,
-                                               CFSTR("mach_inject_bundle_stub.bundle"), NULL, NULL );
-		
-		/*char url[1024];
-         CFURLGetFileSystemRepresentation(injectionURL, true, url, 1024);
-         printf("got a URL %s\n", url);*/
-		if( !injectionURL )
-			err = err_mach_inject_bundle_couldnt_find_injection_bundle;
-	}
-	
-	//	Create injection bundle instance.
-	CFBundleRef injectionBundle = NULL;
-	if( !err ) {
-		injectionBundle = CFBundleCreate( kCFAllocatorDefault, injectionURL );
-		if( !injectionBundle )
-			err = err_mach_inject_bundle_couldnt_load_injection_bundle;
-	}
-	
-	//	Load the thread code injection.
-	void *injectionCode = NULL;
-	if( !err ) {
-		injectionCode = CFBundleGetFunctionPointerForName( injectionBundle,
-                                                          CFSTR( INJECT_ENTRY_SYMBOL ));
-		if( injectionCode == NULL )
-			err = err_mach_inject_bundle_couldnt_find_inject_entry_symbol;
-	}
-	
-	//	Allocate and populate the parameter block.
-	mach_inject_bundle_stub_param *param = NULL;
-	size_t paramSize;
-	if( !err ) {
-		size_t bundlePathSize = strlen( bundlePackageFileSystemRepresentation )
-        + 1;
-		paramSize = sizeof( ptrdiff_t ) + bundlePathSize;
-		param = malloc( paramSize );
-		bcopy( bundlePackageFileSystemRepresentation,
-              param->bundlePackageFileSystemRepresentation,
-              bundlePathSize );
-	}
-	
-	//	Inject the code.
-	if( !err ) {
-		err = mach_inject( injectionCode, param, paramSize, pid, 0 );
-	}
-	
-	//	Clean up.
-	if( param )
-		free( param );
-	/*if( injectionBundle )
-     CFRelease( injectionBundle );*/
-	if( injectionURL )
-		CFRelease( injectionURL );
-	
-	return err;
-}
-#endif
 
 @interface Injector()
+
+#pragma mark - Private Properties
+
 @property (nonatomic, assign) aslclient aslClient;
 @property (nonatomic, assign) aslmsg aslMsg;
 @property (nonatomic, retain) NSString* tempAppId;
 @property (nonatomic, retain) NSURL* tempBundleURL;
+
 @end
 
 @implementation Injector
+
+#pragma mark - Properties
 
 @synthesize aslClient;
 @synthesize aslMsg;
 @synthesize tempAppId;
 @synthesize tempBundleURL;
+
+#pragma mark - Object Lifecycle
+
+// --------------------------------------------------------------------------
+//! Set up ASL connection etc.
+// --------------------------------------------------------------------------
 
 - (id)initWithName:(NSString *)name
 {
@@ -126,6 +62,10 @@ mach_inject_bundle_pid(
     return self;
 }
 
+// --------------------------------------------------------------------------
+//! Cleanup.
+// --------------------------------------------------------------------------
+
 - (void)dealloc 
 {
     asl_free(self.aslMsg);
@@ -134,15 +74,32 @@ mach_inject_bundle_pid(
     [super dealloc];
 }
 
+#pragma mark - Logging
+
+// --------------------------------------------------------------------------
+//! Log to ASL.
+// --------------------------------------------------------------------------
+
 - (void)log:(NSString *)msg
 {
     asl_log(self.aslClient, self.aslMsg, ASL_LEVEL_NOTICE, "%s", [msg UTF8String]);
 }
 
+// --------------------------------------------------------------------------
+//! Log error to asl.
+// --------------------------------------------------------------------------
+
 - (void)error:(NSString *)msg
 {
     asl_log(self.aslClient, self.aslMsg, ASL_LEVEL_ERR, "%s", [msg UTF8String]);
 }
+
+#pragma mark - Injection
+
+// --------------------------------------------------------------------------
+//! Return the process id for the running application with a given bundle id.
+//! Returns zero if the process isn't found.
+// --------------------------------------------------------------------------
 
 - (pid_t)processWithId:(NSString*)appId
 {
@@ -161,76 +118,54 @@ mach_inject_bundle_pid(
     return result;
 }
 
-- (OSStatus)injectBundleAtURL:(NSURL *)bundleURLIn intoApplicationWithId:(NSString *)appIdIn
-{
-    asl_log(aslClient, aslMsg, ASL_LEVEL_NOTICE, "running as uid:%d euid:%d gid:%d", getuid(), geteuid(), getgid());
+// --------------------------------------------------------------------------
+//! Inject the bundle at a given path into the application with a given id.
+//! We expect to find the mach_inject_bundle_stub bundle in the same
+//! folder as the bundle that we're going to inject.
+// --------------------------------------------------------------------------
 
-    NSString* appId = [NSString stringWithString:appIdIn];
-    NSURL* bundleURL = [NSURL fileURLWithPath: [bundleURLIn path]];
+- (OSStatus)injectBundleAtPath:(NSString*)bundlePath intoApplicationWithId:(NSString*)appId
+{
     OSStatus result = noErr;
     pid_t process_id = [self processWithId:appId];
     if (process_id)
     {
-        NSURL* container = [bundleURL URLByDeletingLastPathComponent];
-        NSURL* injectionURL = [container URLByAppendingPathComponent:@"mach_inject_bundle_stub.bundle"];
-        asl_log(aslClient, aslMsg, ASL_LEVEL_NOTICE, "injection bundle path is %s", [[injectionURL path] fileSystemRepresentation]);
-        
-        const char* bundlePath = [[bundleURL path] fileSystemRepresentation];
-        asl_log(aslClient, aslMsg, ASL_LEVEL_NOTICE, "bundle path is %s", bundlePath);
-        
-        asl_log(aslClient, aslMsg, ASL_LEVEL_NOTICE, "CFBundleCreate is %ld", (long) CFBundleCreate);
-        
+        // get the injection sub bundle
+        NSString* container = [bundlePath stringByDeletingLastPathComponent];
+        NSURL* injectionURL = [NSURL fileURLWithPath:[container stringByAppendingPathComponent:@"mach_inject_bundle_stub.bundle"]];
         CFBundleRef injectionBundle = CFBundleCreate( kCFAllocatorDefault, (CFURLRef) injectionURL);
-
-        asl_log(aslClient, aslMsg, ASL_LEVEL_NOTICE, "CFBundleCreate done");
-
         if( !injectionBundle )
         {
-            asl_log(aslClient, aslMsg, ASL_LEVEL_ERR, "failed to load injection bundle");
-            result = err_mach_inject_bundle_couldnt_load_injection_bundle;
+            [self error:@"failed to load injection bundle"];
+            result = kErrorCouldntLoadInjectionBundle;
         }
 
-        if (injectionBundle)
-        {
-            asl_log(aslClient, aslMsg, ASL_LEVEL_NOTICE, "loaded stub bundle");
-        }
-
-        
-        //	Load the thread code injection.
-        asl_log(aslClient, aslMsg, ASL_LEVEL_NOTICE, "loading injection code");
+        // get the function pointer for the stub entrypoint 
         void* injectionCode = CFBundleGetFunctionPointerForName((CFBundleRef) injectionBundle, CFSTR( INJECT_ENTRY_SYMBOL ));
         if( injectionCode == NULL )
         {
-            result = err_mach_inject_bundle_couldnt_find_inject_entry_symbol;
+            [self error:@"failed to find injection entry symbol"];
+            result = kErrorCouldntFindInjectEntrySymbol;
         }
 
-        //	Allocate and populate the parameter block.
+        // inject the code
         mach_inject_bundle_stub_param *param = NULL;
         size_t paramSize;
         if( !result )
         {
-            asl_log(aslClient, aslMsg, ASL_LEVEL_NOTICE, "populating parameter block");
-            size_t bundlePathSize = strlen(bundlePath) + 1;
+            const char* bundle_c = [bundlePath fileSystemRepresentation];
+            size_t bundlePathSize = strlen(bundle_c) + 1;
             paramSize = sizeof( ptrdiff_t ) + bundlePathSize;
             param = malloc( paramSize );
-            bcopy( bundlePath, param->bundlePackageFileSystemRepresentation, bundlePathSize );
-        }
-        
-        //	Inject the code.
-        if( !result ) 
-        {
-            asl_log(aslClient, aslMsg, ASL_LEVEL_NOTICE, "injecting");
+            bcopy( bundle_c, param->bundlePackageFileSystemRepresentation, bundlePathSize );
             result = mach_inject( injectionCode, param, paramSize, process_id, 0 );
+            free( param );
+            if (result != err_none)
+            {
+                [self error:[NSString stringWithFormat:@"injection failed with error %d", result]];
+            }
         }
         
-        //	Clean up.
-        if( param )
-            free( param );
-
-        if (result != err_none)
-        {
-            asl_log(aslClient, aslMsg, ASL_LEVEL_ERR, "injection failed with error %d", result);
-        }
     }
     
     return result;

@@ -8,12 +8,22 @@
 // --------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
+#import <mach/error.h>
+
+#pragma mark - Injection Errors
+
+enum
+{
+    kErrorCouldntFindInjectionBundle	= (err_local + 1),
+    kErrorCouldntLoadInjectionBundle,
+    kErrorCouldntFindInjectEntrySymbol
+};
 
 @interface Injector : NSObject
 
 - (id)initWithName:(NSString*)name;
 - (void)log:(NSString*)msg;
 - (void)error:(NSString*)msg;
-- (OSStatus)injectBundleAtURL:(NSURL*)bundleURL intoApplicationWithId:(NSString*)appId;
+- (OSStatus)injectBundleAtPath:(NSString*)bundlePath intoApplicationWithId:(NSString*)appId;
 
 @end

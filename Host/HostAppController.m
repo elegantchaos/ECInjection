@@ -223,9 +223,8 @@
 - (IBAction)inject:(id)sender
 {
     Injector* injector = [self injector];
-    NSURL* bundleURL = [[NSBundle mainBundle] URLForResource:@"injected" withExtension:@"bundle" subdirectory:@"Injection"];
-    
-    OSStatus result = [injector injectBundleAtURL:bundleURL intoApplicationWithId:@"com.apple.finder"];
+    NSString* bundlePath = [[NSBundle mainBundle] pathForResource:@"injected" ofType:@"bundle" inDirectory:@"Injection"];
+    OSStatus result = [injector injectBundleAtPath:bundlePath intoApplicationWithId:@"com.apple.finder"];
     if (result == noErr)
     {
         NSLog(@"injected ok");
