@@ -649,6 +649,7 @@
 				22426183149FC61E00DB6C53 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4BE4906210445E31006BE471 /* Build configuration list for PBXNativeTarget "injector" */ = {
 			isa = XCConfigurationList;
