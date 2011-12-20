@@ -35,3 +35,26 @@ The host invokes the inject command in the helper, passing it the bundle to inje
 This is clearly not very secure, but hey - it's an example. At this point the injector also needs to be able to find the mach_inject_bundle_stub.bundle. In theory this could live anywhere. Ideally we'd put it inside the injector helper so it could never lose track of it, but we can't do that because the injector is a plain vanilla executable and not a bundle. 
 
 So for convenience in the demo, we put the stub bundle inside the injected code bundle - since we're passing that to the injector anyway. In a more real-world scenario where the injector ran autonomously rather than being triggered by something external, we might pass the stub bundle to the injector during the installation phase, and have it copy it somewhere inside /Library so that it can always find it later.
+
+The injected code just adds a menu to the application's menubar called "Injector", with a single item in it that just logs stuff to the console.
+
+Security
+--------
+
+Once again I should point out that this example pretty much ignores security when it comes to the inter-process communication between the host application, the injection helper, and the injected code. Which isn't to say that it's not useful, simply that you'd have to batten it down far tighter if you want to avoid opening up some potentially horrible security holes.
+
+In the sample, the helper is launched on demand, and only does the injection in response to a command from something else. In a real-world scenario, I guess it would make more sense for it to watch for the target app to launch and do the injection then, assuming that you want the code to be injected whenever the target is running. 
+
+It would also make more sense if the various parameters were embedded into the helper to lock it down tigher and avoid it being subverted. 
+
+In it's current form, you can view the sample as the basis for an "injection server". This in turn could form the basis of some sort of application-enhancer style system allowing multiple client applications to inject code into multiple targets. I leave that as an exercise for the reader.
+
+
+Origins
+-------
+
+The project is based on existing examples, but attempts to present things in a slightly cleaner / simpler way.
+
+It uses [Wolf Rentzsch's mach_star](https://github.com/rentzsch/mach_star) to do the heavy lifting for the injection task.
+
+The helper app part of the example is based on my [ECHelper example](https://github.com/samdeane/ECHelper)
