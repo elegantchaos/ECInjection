@@ -3,7 +3,7 @@ About ECInjection
 
 This is an evolution of the ECHelper project.
 
-Like ECHelper, it installs a helper application that is launched by launchd and runs with enhanced priveleges. 
+Like ECHelper, it installs a helper application that is launched by launchd and runs with enhanced privileges. 
 
 In this project though, the helper's purpose is to inject a code bundle into another application.
 
@@ -14,10 +14,10 @@ The Parts
 
 This sample consists of three targets, and also builds one target from a subproject:
 
-- host: this is the application that provides a user interface for the sample, performs the installation of the helper if necessary, and lets you trigger the injection.
-- injector: this is the helper application that gets installed into /Library and launched by launchd.
-- injected: this is the code bundle that gets injected into whatever application you choose
-- mach_inject_bundle_stub.bundle: this is a small bundle that is part of the mach_star code injection project; the injector application uses it to perform the injection
+- **host**: this is the application that provides a user interface for the sample, performs the installation of the helper if necessary, and lets you trigger the injection.
+- **injector**: this is the helper application that gets installed into /Library and launched by launchd.
+- **injected**: this is the code bundle that gets injected into whatever application you choose
+- **mach_inject_bundle_stub.bundle**: this is a small bundle that is part of the mach_star code injection project; the injector application uses it to perform the injection
 
 How It Works
 ------------
@@ -45,7 +45,7 @@ Once again I should point out that this example pretty much ignores security whe
 
 In the sample, the helper is launched on demand, and only does the injection in response to a command from something else. In a real-world scenario, I guess it would make more sense for it to watch for the target app to launch and do the injection then, assuming that you want the code to be injected whenever the target is running. 
 
-It would also make more sense if the various parameters were embedded into the helper to lock it down tigher and avoid it being subverted. 
+It would also make more sense if the various parameters were embedded into the helper to lock it down tighter and avoid it being subverted. 
 
 In it's current form, you can view the sample as the basis for an "injection server". This in turn could form the basis of some sort of application-enhancer style system allowing multiple client applications to inject code into multiple targets. I leave that as an exercise for the reader.
 
