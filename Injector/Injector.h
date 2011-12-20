@@ -25,5 +25,6 @@ enum
 
 - (id)initWithASL:(ECASLClient*)asl;
 - (OSStatus)injectBundleAtPath:(NSString*)bundlePath intoApplicationWithId:(NSString*)appId;
+- (pid_t)processID;
 
 @end

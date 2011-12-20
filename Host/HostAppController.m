@@ -92,10 +92,11 @@
     Injected* injected = [self injected];
     Injector* injector = [self injector];
     
-    NSString* injectedStatus = injected ? @"Injected code running." : @"Injected code not found";
-    NSString* injectorStatus = injector ? @"Injector is running." : @"Injector not found";
+    NSString* injectedStatus = injected ? [NSString stringWithFormat:@"Injected code running in %@.", [injected hostApplication]] : @"Injected code not found";
+    NSString* injectorStatus = injector ? [NSString stringWithFormat:@"Injector is running as process %d.", [injector processID]] : @"Injector not found";
     
     [self setStatus:[NSString stringWithFormat:@"%@\n%@", injectedStatus, injectorStatus] error:nil];
+    [self performSelector:@selector(updateUI) withObject:nil afterDelay:1.0];
 }
 
 // --------------------------------------------------------------------------
@@ -272,12 +273,7 @@
     // try to install ("bless") the helper tool
     // this will copy it into the right place and set up the launchd plist (if it isn't already there)
     NSError* error = [self installInjectorApplication];
-	if (!error)
-    {
-        // it worked - try to communicate with it
-        [self updateUI];
-	}
-    else
+	if (error)
     {
         // it didn't work
         [self setStatus:@"Injector could not be installed" error:error];

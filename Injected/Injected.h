@@ -11,4 +11,6 @@
 
 @interface Injected : NSObject
 
+- (NSString*)hostApplication;
+
 @end

@@ -12,6 +12,10 @@
 
 @interface Injected()
 
+#pragma mark - Private Properties
+
+@property (nonatomic, retain) NSConnection* server;
+
 #pragma mark - Private Methods
 
 - (void)installMenu;
@@ -21,6 +25,8 @@
 @end
 
 @implementation Injected
+
+@synthesize server;
 
 #pragma mark - Globals
 
@@ -56,6 +62,13 @@ static const Injected* gInjectedCode = nil;
     return self;
 }
 
+- (void)dealloc 
+{
+    [server release];
+    
+    [super dealloc];
+}
+
 #pragma mark - Communications
 
 // --------------------------------------------------------------------------
@@ -66,11 +79,11 @@ static const Injected* gInjectedCode = nil;
 {
     // set up the connection
     NSMachPort* receivePort = [[NSMachPort alloc] init];
-    NSConnection* server = [NSConnection connectionWithReceivePort:receivePort sendPort:nil];
+    self.server = [NSConnection connectionWithReceivePort:receivePort sendPort:nil];
     NSString* name = [[NSBundle bundleForClass:[self class]] bundleIdentifier];
-    [server registerName:name];
+    [self.server registerName:name];
     [receivePort release];
-    [server setRootObject:self];
+    [self.server setRootObject:self];
 }
 
 #pragma mark - Menus
@@ -103,6 +116,15 @@ static const Injected* gInjectedCode = nil;
 - (IBAction)testAction:(id)sender
 {
     NSLog(@"test action fired");
+}
+
+// --------------------------------------------------------------------------
+//! Return id of the application we're running in.
+// --------------------------------------------------------------------------
+
+- (NSString*)hostApplication
+{
+    return [[NSBundle mainBundle] bundleIdentifier];
 }
 
 @end
