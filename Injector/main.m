@@ -52,7 +52,6 @@ int main(int argc, const char * argv[])
         
         // cleanup
         [asl log:@"injector finishing"];
-        [server release];
         [injector release];
         [asl release];
     }
